@@ -16,11 +16,19 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import ScheduleController from '@/actions/App/Http/Controllers/ScheduleController';
+
+// Routes and controllers 
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Schedules',
+        href: ScheduleController.index(),
         icon: LayoutGrid,
     },
 ];
