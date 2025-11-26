@@ -16,7 +16,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Post::all();
+        $jobs = Post::with('category')->get();
         return Inertia::render('jobs/Index', compact('jobs'));
     }
 

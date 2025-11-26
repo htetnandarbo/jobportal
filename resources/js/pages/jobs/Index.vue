@@ -100,7 +100,7 @@ const deleteJob = (id: any) => {
                                         {{ job.id }}
                                     </TableCell>
                                     <TableCell class="h-fit py-2">{{
-                                        job.category_id
+                                        job.category.name
                                     }}</TableCell>
                                     <TableCell class="h-fit py-2">{{
                                         job.title
