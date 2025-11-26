@@ -17,6 +17,8 @@ import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import ScheduleController from '@/actions/App/Http/Controllers/ScheduleController';
+import ChatBotController from '@/actions/App/Http/Controllers/ChatBotController';
+import UserController from '@/actions/App/Http/Controllers/UserController';
 
 // Routes and controllers 
 
@@ -28,7 +30,27 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Schedules',
-        href: ScheduleController.index(),
+        href: ScheduleController.create(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Chat Bot',
+        href: ChatBotController.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Admin User',
+        href: UserController.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Employers',
+        href: UserController.employerIndex(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Job Seekers',
+        href: UserController.jobSeekerIndex(),
         icon: LayoutGrid,
     },
 ];

@@ -10,7 +10,6 @@ import {
   SelectContent,
   SelectItem
 } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Calendar  from "@/components/ui/calendar/Calendar.vue";
 import Input from "@/components/ui/input/Input.vue";
 
@@ -19,9 +18,11 @@ import AppLayout from '@/layouts/AppLayout.vue';
 
 // Type
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import dayjs from "dayjs";
+import Textarea from "@/components/ui/textarea/Textarea.vue";
+import ScheduleController from "@/actions/App/Http/Controllers/ScheduleController";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -30,10 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const candidate = ref("");
 const scheduleDate = ref(null);
-
-const candidates = ["Alice", "Bob", "Charlie"];
 
 const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
@@ -52,11 +50,26 @@ const filteredMinutes = computed(() =>
   minutes.filter(m => m.includes(minuteSearch.value))
 );
 
+
+
+
+
+const props = defineProps({
+    candidates: {
+        type: Array,
+        required: true
+    }
+})
+
+const form = useForm({
+    candidate_id: '',
+    scheduleDate: '',
+    description: ''
+})
+
 const handleSubmit = () => {
-  console.log({
-    candidate: candidate.value,
-    scheduleDate: scheduleDate.value,
-  });
+    form.scheduleDate = scheduleDate.value ? dayjs(scheduleDate.value).format('YYYY-MM-DD') + ' ' + selectedHour.value + ':' + selectedMinute.value : '';
+    form.submit(ScheduleController.store());
 };
 </script>
 
@@ -70,20 +83,22 @@ const handleSubmit = () => {
            <form @submit.prevent="handleSubmit" class="space-y-4 max-w-md">
                 <!-- Select Candidate -->
                 <div>
-                    <Label for="candidate">Select Candidate</Label>
-                    <Select v-model="candidate">
+                    <Label for="candidate" class="mb-3">Select Candidate</Label>
+                    <Select v-model="form.candidate_id">
                         <SelectTrigger>
                         <SelectValue placeholder="Select candidate" />
                         </SelectTrigger>
                         <SelectContent>
-                        <SelectItem v-for="c in candidates" :key="c" :value="c">
-                            {{ c }}
+                        <SelectItem v-for="candidate in candidates" :key="candidate.id" :value="candidate.id">
+                            {{ candidate.name }}
                         </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 <!-- Date & Time Picker -->
+                <Label for="scheduleDate" class="mb-3">Interview Date & Time</Label>
+
                 <Input
                     readonly
                     placeholder="Pick date & time"
@@ -97,6 +112,8 @@ const handleSubmit = () => {
                     <div class="flex space-x-2">
                     <!-- Hour -->
                     <div class="flex-1">
+
+                        <Label class="mb-3">Hour</Label>
                         <Select v-model="selectedHour">
                         <SelectTrigger class="w-full">
                             <SelectValue placeholder="HH" />
@@ -115,6 +132,7 @@ const handleSubmit = () => {
 
                     <!-- Minute -->
                     <div class="flex-1">
+                        <Label class="mb-3">Minute</Label>
                         <Select v-model="selectedMinute">
                         <SelectTrigger class="w-full">
                             <SelectValue placeholder="MM" />
@@ -132,6 +150,11 @@ const handleSubmit = () => {
                     </div>
                     </div>
 
+                </div>
+
+                <div>
+                    <Label class="block text-sm font-medium text-gray-700 mb-1">Description</Label>
+                    <Textarea v-model="form.description" placeholder="Enter interview description" rows="3" />
                 </div>
 
                 <!-- Submit Button -->

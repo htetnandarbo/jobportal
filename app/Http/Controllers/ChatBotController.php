@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Schedule;
-use App\Models\User;
+use App\Models\FaqQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class ScheduleController extends Controller
+class ChatBotController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('schedules/Index');
+        $faqs = FaqQuestion::with(['faqOptions', 'faqOptions.faqAnswer'])->get();
+        return Inertia::render('chatbot/Index', compact('faqs'));
     }
 
     /**
@@ -23,12 +23,7 @@ class ScheduleController extends Controller
      */
     public function create()
     {
-        $candidates = User::whereIn('role', ['job-seeker', 'freelancer'])->get();
-
-         return Inertia::render('schedules/Create', [
-            'candidates' => $candidates
-        ]);
-
+        return Inertia::render('chatbot/CreateEdit');
     }
 
     /**
@@ -36,20 +31,25 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'candidate_id' => 'required|exists:users,id',
-            'scheduleDate' => 'required|date',
-            'description' => 'nullable|string'
+        $request->validate([
+            'question' => 'required|string|max:255',
+            'optionAnswer' => 'required|array'
         ]);
-        
-        Schedule::create([
-            'candidate_id' => $validated['candidate_id'],
-            'interview_time' => $validated['scheduleDate'],
-            'description' => $validated['description'],
-            'employer_id' => Auth::id() // Assuming employer is the authenticated user
+
+        dd($request->all());
+
+        $faqQuestion = FaqQuestion::create([
+            'user_id' => Auth::id(),
+            'question' => $request->question,
         ]);
-        
-        return redirect()->route('schedules.index')->with('success', 'Schedule created successfully.');
+
+        foreach ($request->optionAnswer as $option) {
+            // TODO: Create FAQ option and answer
+        }
+
+
+
+        // TODO: Handle optionAnswer array - create related FAQ options and answers
     }
 
     /**
