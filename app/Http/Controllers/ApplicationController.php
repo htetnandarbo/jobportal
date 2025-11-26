@@ -14,7 +14,7 @@ class ApplicationController extends Controller
      */
     public function index()
     {
-        $applications = Application::where('employer_id', Auth::id())->with('candidate', 'employer', 'job')->get();
+        $applications = Application::where('employer_id', Auth::id())->with('candidate', 'employer', 'job', 'schedule')->get();
         return Inertia::render('application/Index', compact('applications'));
     }
 
@@ -62,7 +62,11 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $application = Application::find($id);
+        if ($application) {
+            $application->update($request->only('status'));
+        }
+        return redirect()->back();
     }
 
     /**

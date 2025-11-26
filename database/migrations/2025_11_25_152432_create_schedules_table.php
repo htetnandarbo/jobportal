@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('candidate_id');
+            $table->unsignedBigInteger('job_id');
+            $table->unsignedBigInteger('application_id');
             $table->unsignedBigInteger('employer_id');
             $table->timestamp('interview_time');
             $table->text('description');

@@ -21,12 +21,16 @@ class ScheduleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $candidates = User::whereIn('role', ['job-seeker', 'freelancer'])->get();
+        $candidate = User::findOrFail($request->user_id);
+        $job_id = $request->job_id;
+        $application_id = $request->application_id;
 
          return Inertia::render('schedules/Create', [
-            'candidates' => $candidates
+            'candidate' => $candidate,
+            'job_id' => $job_id,
+            'application_id' => $application_id
         ]);
 
     }
@@ -39,17 +43,22 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'candidate_id' => 'required|exists:users,id',
             'scheduleDate' => 'required|date',
-            'description' => 'nullable|string'
+            'description' => 'required|string|max:500',
+            'job_id' => 'required',
+            'application_id' => 'required'
         ]);
         
         Schedule::create([
             'candidate_id' => $validated['candidate_id'],
             'interview_time' => $validated['scheduleDate'],
             'description' => $validated['description'],
-            'employer_id' => Auth::id() // Assuming employer is the authenticated user
+            'employer_id' => Auth::id(), // Assuming employer is the authenticated user
+            'job_id' => $validated['job_id'],
+            'application_id' => $validated['application_id']
         ]);
+
         
-        return redirect()->route('schedules.index')->with('success', 'Schedule created successfully.');
+        return redirect()->route('applications.index');
     }
 
     /**

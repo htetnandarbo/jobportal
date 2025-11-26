@@ -21,6 +21,9 @@ import Footer from './layout/Footer.vue'
 import { useForm } from '@inertiajs/vue3'
 import applications from '@/routes/applications'
 import ApplicationController from '@/actions/App/Http/Controllers/ApplicationController'
+import { useBasicSearch } from '@/composables/useBasicSearch'
+import { ref, watch } from 'vue'
+import FrontController from '@/actions/App/Http/Controllers/FrontController'
 
 const props = defineProps({
     jobs: {
@@ -43,6 +46,18 @@ const applyJob = (jobId, employerId) => {
     form.submit(ApplicationController.store())
 }
 
+const q = ref('')
+
+// watch(q.value, ()=>{
+//     useBasicSearch(FrontController.welcome().url, q.value);
+// })
+
+useBasicSearch(FrontController.welcome().url, q);
+
+const search = (id: string) => {
+    useForm({category_id: id}).submit(FrontController.welcome());
+}
+
 </script>
 
 <template>
@@ -53,7 +68,7 @@ const applyJob = (jobId, employerId) => {
     <section class="max-w-7xl mx-auto py-4  rounded-lg mt-6">
         <div class="flex items-center gap-2 px-6">
             <div class="w-full">
-                <Input placeholder="Keyword" />
+                <Input placeholder="Keyword" v-model="q" />
             </div>
             <div class="w-full">
                 <Select>
@@ -89,8 +104,8 @@ const applyJob = (jobId, employerId) => {
     <section class="max-w-7xl mx-auto py-4 mt-6">
         <div>
             <h2 class="text-2xl text-center font-bold mb-4">Explore by Category</h2>
-            <div class="flex items-center gap-4">
-                <div v-for="category in categories" :key="category.id" class="p-1 rounded-md min-w-20 text-center border-2  hover:cursor-pointer">
+            <div class="flex items-center gap-4 overflow-auto py-2">
+                <div @click="search(category.id)" v-for="category in categories" :key="category.id" class="mb-2 p-1 rounded-md min-w-20 text-center border-2  hover:cursor-pointer">
                      {{ category.name }}
                 </div>
             </div>
@@ -102,7 +117,13 @@ const applyJob = (jobId, employerId) => {
         <div>
             <h2 class="text-2xl text-center font-bold mb-4">Jobs</h2>
             <div class="space-y-4">
-                <Card v-for="job in jobs" :key="job.id" class="relative">
+                <Card v-for="job in jobs" :key="job.id" class="relative border-2 "
+                :class="{
+                    'border-green-300' : job.application_status == 'accepted',
+                    'border-blue-300' : job.application_status == 'viewed',
+                    'border-red-300' : job.application_status == 'rejected'
+                }"
+                >
                     <div class="absolute right-5 top-2 text-xs bg-green-500 p-1 rounded-md text-white">Posted at {{ job.post_date }}</div>
 
                     <CardContent class="flex gap-4 ">
@@ -133,7 +154,24 @@ const applyJob = (jobId, employerId) => {
 
                     <div class="p-4 ms-auto">
                         <Button @click="applyJob(job.id, job.employer_id)" v-if="!job.applied">Apply</Button>
-                        <Button variant="outline" v-else>{{ job.application_status }} ...</Button>
+                        <Button variant="outline" v-else>
+
+                            <span v-if="job.application_status == 'pending'" class="text-amber-500">
+                                {{ job.application_status }} ...
+                            </span>
+
+                            <span v-if="job.application_status == 'accepted'" class="text-green-500">
+                                {{ job.application_status }}
+                            </span>
+
+                            <span v-if="job.application_status == 'reviewed'" class="text-blue-500">
+                                {{ job.application_status }}
+                            </span>
+
+                            <span v-if="job.application_status == 'rejected'" class="text-red-500">
+                                {{ job.application_status }}
+                            </span>
+                        </Button>
 
                     </div>
                 </Card>

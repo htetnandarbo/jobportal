@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\Resume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,10 +13,20 @@ class ResumeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $resume = Resume::where('user_id', Auth::id())->first();
-        return Inertia::render('resume/Index', compact('resume'));
+        $userId = $request->user_id ?? Auth::id();
+        $hideButton = $request->isHide ?? false;
+        $previousUrl = url()->previous();
+        $resume = Resume::where('user_id', $userId)->first();
+
+        if($request->application_id){
+            $application = Application::findOrFail($request->application_id);
+            if($application->status != 'accepted' && $application->status != 'rejected'){
+                $application->update($request->only('status'));
+            }
+        }
+        return Inertia::render('resume/Index', compact('resume', 'hideButton', 'previousUrl'));
     }
 
     /**

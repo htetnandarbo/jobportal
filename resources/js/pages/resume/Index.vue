@@ -7,7 +7,19 @@
       </div>
       <div class="max-w-4xl mx-auto p-6 space-y-6">
         <div class="flex justify-end">
-          <Link :href="
+        <Link
+        v-if="hideButton"
+          :href="previousUrl" >
+            <Button
+                class="ms-auto mb-5 cursor-pointer rounded-2xl  text-white shadow-sm shadow-amber-50 transition-all  sm:w-auto"
+                >
+                 <ArrowLeft></ArrowLeft>Back
+              </Button>
+        </Link>
+
+        <Link
+          v-if="!hideButton"
+          :href="
             resume ? 
             ResumeController.edit(resume?.id).url
             :
@@ -105,7 +117,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
 import Button from "@/components/ui/button/Button.vue";
 import ResumeController from "@/actions/App/Http/Controllers/ResumeController";
-import { PlusIcon } from "lucide-vue-next";
+import { ArrowLeft, PlusIcon } from "lucide-vue-next";
 
 // // Example data — replace with real resume data from backend
 // const resume = {
@@ -133,6 +145,12 @@ import { PlusIcon } from "lucide-vue-next";
 const props = defineProps({
   resume: {
     type: Array
+  },
+  hideButton: {
+    type: Boolean
+  },
+  previousUrl: {
+    type: String
   }
 })
 </script>

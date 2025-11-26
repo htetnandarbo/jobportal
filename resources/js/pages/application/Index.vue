@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import ApplicationController from '@/actions/App/Http/Controllers/ApplicationController';
 import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
 import ChatBotController from '@/actions/App/Http/Controllers/ChatBotController';
+import ResumeController from '@/actions/App/Http/Controllers/ResumeController';
+import ScheduleController from '@/actions/App/Http/Controllers/ScheduleController';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
@@ -22,9 +25,22 @@ defineProps<{
 }>();
 
 // Delete
-const deleteCategory = (id: any) => {
-    useForm({}).submit(CategoryController.destroy(id));
-};
+
+const seeResume = (id: string, applicationId : string) => {
+    useForm({user_id: id, isHide: true, application_id : applicationId, status: 'reviewed'}).submit(ResumeController.index());
+}
+
+const acceptResume = (id: string) => {
+    useForm({status: 'accepted'}).submit(ApplicationController.update(id))
+}
+
+const rejectResume = (id: string) => {
+    useForm({status: 'rejected'}).submit(ApplicationController.update(id))
+}
+
+const sendSchedule = (id: string, applicationId : string, jobId: string) => {
+    useForm({user_id: id, application_id: applicationId, job_id: jobId}).submit(ScheduleController.create());
+}
 </script>
 
 <template>
@@ -33,14 +49,6 @@ const deleteCategory = (id: any) => {
     <AppLayout>
         <div class="m-5">
             <div class="mb-5">
-                <div class="flex justify-end gap-2">
-                    <Link :href="ChatBotController.create().url">
-                        <Button
-                            class="cursor-pointer rounded-2xl bg-amber-500 text-white shadow-sm shadow-amber-50 transition-all hover:bg-amber-600 hover:shadow-sm hover:shadow-amber-300 sm:w-auto"
-                            >Add New <plus-icon></plus-icon
-                        ></Button>
-                    </Link>
-                </div>
             </div>
             <div class="grid gap-5 rounded-xl border p-5">
                 <div class="lg:flex lg:items-center lg:justify-between">
@@ -65,6 +73,9 @@ const deleteCategory = (id: any) => {
                                     >
                                     <TableHead class="h-fit py-3"
                                         >Status</TableHead
+                                    >
+                                    <TableHead class="h-fit py-3"
+                                        >Schedule Sent</TableHead
                                     >
                                     <TableHead
                                         class="h-fit rounded-r-full py-3"
@@ -91,36 +102,51 @@ const deleteCategory = (id: any) => {
                                     }}</TableCell>
                                     <TableCell class="h-fit py-2"
                                     :class="{
-                                        'text-amber-500' : application.status == 'pending'
+                                        'text-amber-500' : application.status == 'pending',
+                                        'text-blue-500' : application.status == 'reviewed',
+                                        'text-green-500' : application.status == 'accepted',
+                                        'text-red-500' : application.status == 'rejected'
                                     }">{{
                                         application.status
+                                    }}</TableCell>
+                                    <TableCell class="h-fit py-2">{{ 
+                                        application.schedule_sent ? 'Schedule has sent to candidate' : "Schedule hasn't sent yet"
                                     }}</TableCell>
 
                                     <TableCell
                                         class="h-fit rounded-r-full py-2"
                                     >
                                         <div class="flex gap-2">
-                                            <!-- <Link
-                                                :href="
-                                                    CategoryController.edit(
-                                                        category.id,
-                                                    )
-                                                "
-                                            >
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    >Edit</Button
-                                                >
-                                            </Link>
                                             <Button
+                                                @click="seeResume(application.candidate_id, application.id)"
+                                                size="sm"
+                                                variant="outline"
+                                                >Resume</Button
+                                            >
+                                            <Button
+                                                v-if="application.status == 'accepted' && !application.schedule_sent"
+                                                @click="sendSchedule(application.candidate_id, application.id, application.job_id)"
+                                                size="sm"
+                                                variant="outline"
+                                                >Send Schedule</Button
+                                            >
+                                            <Button
+                                                
                                                 size="sm"
                                                 variant="outline"
                                                 @click="
-                                                    deleteCategory(category.id)
+                                                    acceptResume(application.id)
                                                 "
-                                                >Delete</Button
-                                            > -->
+                                                >Accept</Button
+                                            >
+                                            <Button
+                                                size="sm"
+                                                variant="destructive"
+                                                @click="
+                                                    rejectResume(application.id)
+                                                "
+                                                >Reject</Button
+                                            >
                                         </div>
                                     </TableCell>
                                 </TableRow>

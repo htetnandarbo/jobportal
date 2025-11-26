@@ -55,14 +55,22 @@ const filteredMinutes = computed(() =>
 
 
 const props = defineProps({
-    candidates: {
-        type: Array,
+    candidate: {
+        type: Object,
         required: true
+    },
+    job_id: {
+        type: String
+    },
+    application_id: {
+        type: String
     }
 })
 
 const form = useForm({
-    candidate_id: '',
+    candidate_id: props.candidate.id,
+    job_id: props.job_id,
+    application_id: props.application_id,
     scheduleDate: '',
     description: ''
 })
@@ -83,17 +91,8 @@ const handleSubmit = () => {
            <form @submit.prevent="handleSubmit" class="space-y-4 max-w-md">
                 <!-- Select Candidate -->
                 <div>
-                    <Label for="candidate" class="mb-3">Select Candidate</Label>
-                    <Select v-model="form.candidate_id">
-                        <SelectTrigger>
-                        <SelectValue placeholder="Select candidate" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        <SelectItem v-for="candidate in candidates" :key="candidate.id" :value="candidate.id">
-                            {{ candidate.name }}
-                        </SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <Label for="candidate" class="mb-3">Send Schedule to Candidate - {{ candidate.name }}</Label>
+                    
                 </div>
 
                 <!-- Date & Time Picker -->
