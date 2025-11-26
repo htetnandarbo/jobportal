@@ -26,6 +26,7 @@ const props = defineProps<{
 // Form
 const form = useForm({
     name: props.category.name ?? '',
+    image: props.category.image ?? '',
 });
 
 const submit = () => {
@@ -54,6 +55,24 @@ const submit = () => {
                         v-model="form.name"
                         required
                     />
+                </div>
+
+                <!-- Image Upload -->
+                <div class="grid gap-2">
+                    <Label for="image">Image</Label>
+                    <Input
+                        id="name"
+                        type="file"
+                        name="name"
+                       
+                        @change="e => form.image = e.target.files[0]"
+                      
+                    />
+
+                    <div v-if="props.category.image">
+    <img :src="`/storage/${props.category.image}`" class="w-20 h-20 object-cover">
+</div>
+
                 </div>
 
                 <div>

@@ -59,6 +59,9 @@ const deleteCategory = (id: any) => {
                                     <TableHead class="h-fit py-3"
                                         >Name</TableHead
                                     >
+                                     <TableHead class="h-fit py-3"
+                                        >Image</TableHead
+                                    >
                                     <TableHead
                                         class="h-fit rounded-r-full py-3"
                                     >
@@ -79,6 +82,9 @@ const deleteCategory = (id: any) => {
                                     <TableCell class="h-fit py-2">{{
                                         category.name
                                     }}</TableCell>
+                                      <TableCell class="h-fit py-2">
+                                        <img :src="`/storage/${category.image}`" class="w-20 h-20 object-cover" />
+                                      </TableCell>
 
                                     <TableCell
                                         class="h-fit rounded-r-full py-2"
