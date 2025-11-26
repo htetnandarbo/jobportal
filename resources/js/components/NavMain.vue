@@ -11,7 +11,7 @@ import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 
 defineProps<{
-    items: NavItem[];
+    items: any[];
 }>();
 
 const page = usePage();
@@ -26,6 +26,7 @@ const page = usePage();
                     as-child
                     :is-active="urlIsActive(item.href, page.url)"
                     :tooltip="item.title"
+                    v-if="item.hasPaid"
                 >
                     <Link :href="item.href">
                         <component :is="item.icon" />

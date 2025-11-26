@@ -9,6 +9,20 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { ref } from 'vue';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from "@/components/ui/select";
+
+const userTypes = ref<{value: string, name: string}[]>([
+    {value: 'employer', name: 'Employer'},
+    {value: 'job-seeker', name: 'Job Seeker'},
+    {value: 'freelancer', name: 'Freelancer'},
+])
 </script>
 
 <template>
@@ -80,6 +94,23 @@ import { LoaderCircle } from 'lucide-vue-next';
                         placeholder="Confirm password"
                     />
                     <InputError :message="errors.password_confirmation" />
+                </div>
+                
+
+                <div class="flex-1">
+                    <Label for="role" class="mb-3">User Type</Label>
+
+                    <Select name="role">
+                        <SelectTrigger class="w-full">
+                            <SelectValue placeholder="Select user type" />
+                        </SelectTrigger>
+                        <SelectContent>     
+                            <SelectItem v-for="userType in userTypes" :key="userType.value" :value="userType.value">{{ userType.name }}</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <InputError :message="errors.role" />
+
                 </div>
 
                 <Button

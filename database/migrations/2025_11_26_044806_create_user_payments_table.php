@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('user_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('candidate_id');
-            $table->unsignedBigInteger('employer_id');
-            $table->timestamp('interview_time');
-            $table->text('description');
+            $table->unsignedBigInteger('user_id'); // employer id
+            $table->string('voucher_image');
+            $table->enum('payment_status', ['pending', 'completed'])->default('pending');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('user_payments');
     }
 };

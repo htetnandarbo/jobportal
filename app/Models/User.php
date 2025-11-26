@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -45,5 +46,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // has paid 
+    public function hasPaid()
+    {
+        return $this->userPayment()->where('payment_status', 'paid')->exists();
+    }
+
+    # Relations
+    public function userPayment()
+    {
+        return $this->hasOne(UserPayment::class);
     }
 }
