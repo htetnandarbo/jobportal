@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->text('question');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -24,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('faq_questions');
+        Schema::enableForeignKeyConstraints();
     }
 };

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FaqOption;
 use App\Models\FaqQuestion;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -18,8 +20,9 @@ class ChatBotController extends Controller
         return Inertia::render('chatbot/Index', compact('faqs'));
     }
 
-    public function front()
+    public function front(Request $request)
     {
+        dd($request->all());
         return Inertia::render('chatbot/Front');
     }
 
@@ -45,6 +48,7 @@ class ChatBotController extends Controller
         $faqQuestion = FaqQuestion::create([
             'user_id' => Auth::id(),
             'question' => $request->question,
+            'order' => FaqQuestion::count() + 1
         ]);
 
         foreach ($request->optionAnswer as $option) {
@@ -67,9 +71,27 @@ class ChatBotController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
-        //
+        $chats = FaqQuestion::where('user_id', $id)->with(['faqOptions', 'faqOptions.faqAnswer'])
+        ->when($request->order, function($query) use($request){
+            $query->where('order', $request->order);
+        })
+        ->paginate(10)
+        ->withQueryString();
+        $user = User::find($id);
+
+        $answer = null;
+        if($request->option_id){
+            $option = FaqOption::find($request->option_id);
+            $answer = $option->faqAnswer;
+        }
+
+        if($chats->isEmpty()){
+            return redirect()->route('home');
+        }
+
+        return Inertia::render('chatbot/Front', compact('chats', 'user', 'answer'));
     }
 
     /**
@@ -93,6 +115,7 @@ class ChatBotController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        FaqQuestion::destroy($id);
+        return redirect()->route('chat-bot.index'); 
     }
 }

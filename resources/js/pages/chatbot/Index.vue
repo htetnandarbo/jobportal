@@ -22,8 +22,8 @@ defineProps<{
 }>();
 
 // Delete
-const deleteCategory = (id: any) => {
-    useForm({}).submit(CategoryController.destroy(id));
+const deleteChatBot = (id: any) => {
+    useForm({}).submit(ChatBotController.destroy(id));
 };
 </script>
 
@@ -69,45 +69,43 @@ const deleteCategory = (id: any) => {
                             </TableHeader>
                             <TableBody>
                                 <TableRow
-                                    v-for="faq in faqs"
+                                    v-for="(faq, index) in faqs"
                                     :key="faq.id"
                                 >
-                                    <!-- <TableCell
+                                    <TableCell
                                         class="h-fit rounded-l-full py-2"
                                     >
-                                        {{ category.id }}
+                                        {{ index + 1 }}
                                     </TableCell>
                                     <TableCell class="h-fit py-2">{{
-                                        category.name
+                                        faq.question
                                     }}</TableCell>
+                                    <TableCell class="h-fit py-2">
+                                        <ul v-for="option in faq.faq_options" :key="option.id">
+                                            <li>{{ option.option_text }}
+                                                <ul >
+                                                    - {{ option.faq_answer.answer_text }}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </TableCell>
+                                    
 
                                     <TableCell
                                         class="h-fit rounded-r-full py-2"
                                     >
                                         <div class="flex gap-2">
-                                            <Link
-                                                :href="
-                                                    CategoryController.edit(
-                                                        category.id,
-                                                    )
-                                                "
-                                            >
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    >Edit</Button
-                                                >
-                                            </Link>
+                                           
                                             <Button
                                                 size="sm"
                                                 variant="outline"
                                                 @click="
-                                                    deleteCategory(category.id)
+                                                    deleteChatBot(faq.id)
                                                 "
                                                 >Delete</Button
                                             >
                                         </div>
-                                    </TableCell> -->
+                                    </TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>

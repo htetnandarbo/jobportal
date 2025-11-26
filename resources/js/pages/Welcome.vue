@@ -60,6 +60,10 @@ const search = (id: string) => {
     useForm({category_id: id}).submit(FrontController.welcome());
 }
 
+const chatBot = (employerId: string) => {
+    useForm({employer_id: employerId}).submit(ChatBotController.show(employerId));
+}
+
 </script>
 
 <template>
@@ -157,7 +161,7 @@ const search = (id: string) => {
                     </CardContent>
 
                     <div class="p-4 ms-auto space-x-5">
-                        <Button variant="outline">Chat with employer</Button>
+                        <Button type="button" @click="chatBot(job.employer_id)" variant="outline">Chat with employer</Button>
                         <Button @click="applyJob(job.id, job.employer_id)" v-if="!job.applied">Apply</Button>
                         <Button variant="outline" v-else>
 

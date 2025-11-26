@@ -46,7 +46,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::resource('schedules', ScheduleController::class);
 
     Route::resource('chat-bot', ChatBotController::class);
-    Route::get('chat-bot/front/{employer-id}', [ChatBotController::class, 'front']);
+    Route::get('chat-bot/front', [ChatBotController::class, 'front'])->name('chat-bot.front');
 
     Route::resource('user', UserController::class);
     Route::get('employers', [UserController::class, 'employerIndex'])->name('employers.index');

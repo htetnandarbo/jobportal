@@ -13,5 +13,10 @@ class FaqQuestion extends Model
         return $this->hasMany(FaqOption::class, 'faq_question_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     
 }
