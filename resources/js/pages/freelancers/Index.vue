@@ -25,7 +25,7 @@ defineProps<{
 
 // Delete
 const deleteUser = (id: any) => {
-    useForm({}).submit(UserController.deleteJobSeeker(id));
+    useForm({}).submit(UserController.deleteFreelancer(id));
 };
 
 const q = ref<string>("");
@@ -43,12 +43,6 @@ const q = ref<string>("");
                 <div class="lg:flex lg:items-center lg:justify-between">
                     <!-- Search -->
                     <BasicSearch :url="UserController.index().url" :q="q" />
-                    <!-- <Link :href="UserController.create().url">
-                        <Button
-                            class="cursor-pointer rounded-2xl bg-amber-500 text-white shadow-sm shadow-amber-50 transition-all hover:bg-amber-600 hover:shadow-sm hover:shadow-amber-300 sm:w-auto"
-                            >Add New <plus-icon></plus-icon
-                        ></Button>
-                    </Link> -->
                 </div>
 
                 <div>

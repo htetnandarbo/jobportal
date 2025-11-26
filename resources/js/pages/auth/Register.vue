@@ -95,26 +95,7 @@ const userTypes = ref<{value: string, name: string}[]>([
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
-                <div class="grid gap-2">
-                    <Label for="role">User Type</Label>
-                    <Select name="role">
-                        <SelectTrigger>
-                        <SelectValue placeholder="Select a user type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        <SelectItem value="employer">
-                            Employer
-                        </SelectItem>
-                        <SelectItem value="jobseeker">
-                            Jobseeker
-                        </SelectItem>
-                        <SelectItem value="freelancer">
-                            Freelancer
-                        </SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <InputError :message="errors.role" />
-                </div>
+                
 
                 <div class="flex-1">
                     <Label for="role" class="mb-3">User Type</Label>

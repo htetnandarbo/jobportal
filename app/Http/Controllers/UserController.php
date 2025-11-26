@@ -137,4 +137,20 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('job-seeker.index');
     }
+
+    public function freelancerIndex(Request $request){
+       $users = User::where('role', 'freelancer')
+        ->when($request->q, function($query) use($request){
+            $query->where('name', 'like', '%'.$request->q.'%')
+            ->orWhere('email', 'like', '%'.$request->q.'%');
+        })
+        ->get();
+        return Inertia::render('freelancers/Index', compact('users')); 
+    }
+
+    public function deleteFreelancer($id){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('freelancers.index');
+    }
 }

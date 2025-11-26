@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MakePaymentController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,12 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('employers/{id}', [UserController::class, 'deleteEmployer'])->name('employers.delete');
 
     Route::get('job-seekers', [UserController::class, 'jobSeekerIndex'])->name('job-seekers.index');
+    Route::delete('job-seekers/{id}', [UserController::class, 'deleteJobSeeker'])->name('job-seekers.delete');
+
+    Route::get('freelancers', [UserController::class, 'freelancerIndex'])->name('freelancers.index');
+    Route::delete('freelancers/{id}', [UserController::class, 'deleteFreelancer'])->name('freelancers.delete');
+
+    Route::resource('payments', PaymentController::class);
 });
 
 require __DIR__ . '/settings.php';

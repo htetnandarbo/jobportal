@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
+import PaymentController from '@/actions/App/Http/Controllers/PaymentController';
 import UserController from '@/actions/App/Http/Controllers/UserController';
 import BasicSearch from '@/components/BasicSearch.vue';
 import { Button } from '@/components/ui/button';
@@ -13,19 +14,17 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { create as categoryCreate } from '@/routes/categories';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { PlusIcon } from 'lucide-vue-next';
+import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 // Props
 defineProps<{
-    users: any;
+    payments: any;
 }>();
 
 // Delete
-const deleteUser = (id: any) => {
-    useForm({}).submit(UserController.deleteJobSeeker(id));
+const approve = (id: any) => {
+    useForm({}).submit(PaymentController.update(id));
 };
 
 const q = ref<string>("");
@@ -43,12 +42,6 @@ const q = ref<string>("");
                 <div class="lg:flex lg:items-center lg:justify-between">
                     <!-- Search -->
                     <BasicSearch :url="UserController.index().url" :q="q" />
-                    <!-- <Link :href="UserController.create().url">
-                        <Button
-                            class="cursor-pointer rounded-2xl bg-amber-500 text-white shadow-sm shadow-amber-50 transition-all hover:bg-amber-600 hover:shadow-sm hover:shadow-amber-300 sm:w-auto"
-                            >Add New <plus-icon></plus-icon
-                        ></Button>
-                    </Link> -->
                 </div>
 
                 <div>
@@ -62,10 +55,13 @@ const q = ref<string>("");
                                         No
                                     </TableHead>
                                     <TableHead class="h-fit py-3"
-                                        >Name</TableHead
+                                        >User</TableHead
                                     >
                                     <TableHead class="h-fit py-3"
-                                        >Email</TableHead
+                                        >Voucher Image</TableHead
+                                    >
+                                    <TableHead class="h-fit py-3"
+                                        >Payment Status</TableHead
                                     >
                                     <TableHead
                                         class="h-fit rounded-r-full py-3"
@@ -76,8 +72,8 @@ const q = ref<string>("");
                             </TableHeader>
                             <TableBody>
                                 <TableRow
-                                    v-for="(user, index) in users"
-                                    :key="user.id"
+                                    v-for="(payment, index) in payments"
+                                    :key="payment.id"
                                 >
                                     <TableCell
                                         class="h-fit rounded-l-full py-2"
@@ -85,12 +81,19 @@ const q = ref<string>("");
                                         {{ index + 1 }}
                                     </TableCell>
                                     <TableCell class="h-fit py-2">{{
-                                        user.name
+                                        payment.user.name
                                     }}</TableCell>
-                                    <TableCell class="h-fit py-2">{{
-                                        user.email
+                                    <TableCell class="h-fit py-2">
+                                        <img :src="`/images/${payment.voucher_image}`" class="w-30 h-30 object-cover rounded-md"/>
+                                    </TableCell>
+                                    <TableCell class="h-fit py-2" :class="
+                                    {
+                                        'text-amber-400' : payment.payment_status == 'pending',
+                                        'text-green-500' : payment.payment_status == 'completed'
+                                    }
+                                    ">{{
+                                        payment.payment_status
                                     }}</TableCell>
-
                                     <TableCell
                                         class="h-fit rounded-r-full py-2"
                                     >
@@ -98,13 +101,11 @@ const q = ref<string>("");
                                             
 
                                             <Button
-                                                v-if="$page.props.auth.user.id != user.id"
+                                                v-if="payment.payment_status == 'pending'"
                                                 size="sm"
                                                 variant="outline"
-                                                @click="
-                                                    deleteUser(user.id)
-                                                "
-                                                >Delete</Button
+                                                @click="approve(payment.id)"
+                                                >Approve</Button
                                             >
                                         </div>
                                     </TableCell>
