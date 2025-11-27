@@ -20,6 +20,7 @@ import { useBasicSearch } from '@/composables/useBasicSearch'
 import { ref, watch } from 'vue'
 import FrontController from '@/actions/App/Http/Controllers/FrontController'
 import ChatBotController from '@/actions/App/Http/Controllers/ChatBotController'
+import Paginator from './layout/Paginator.vue'
 
 defineProps<{
     jobs: any,
@@ -28,11 +29,11 @@ defineProps<{
 
 const form = useForm({
     'job_id': '',
-    'candidate_id' : '',
-    'employer_id':'',
+    'candidate_id': '',
+    'employer_id': '',
 })
 
-const applyJob = (jobId : any, employerId : any) => {
+const applyJob = (jobId: any, employerId: any) => {
     form.job_id = jobId
     form.employer_id = employerId
     form.submit(ApplicationController.store())
@@ -47,15 +48,15 @@ const q = ref('')
 useBasicSearch(FrontController.welcome().url, q);
 
 const search = (id: string) => {
-    useForm({category_id: id}).submit(FrontController.welcome());
+    useForm({ category_id: id }).submit(FrontController.welcome());
 }
 
 const chatBot = (employerId: string) => {
-    useForm({employer_id: employerId}).submit(ChatBotController.show(employerId));
+    useForm({ employer_id: employerId }).submit(ChatBotController.show(employerId));
 }
 
 const searchByCategory = (event: any) => {
-    useForm({category_id: event}).submit(FrontController.welcome());
+    useForm({ category_id: event }).submit(FrontController.welcome());
 }
 
 </script>
@@ -90,13 +91,13 @@ const searchByCategory = (event: any) => {
         <h2 class="text-2xl text-center font-bold mb-4">Explore by Categories</h2>
         <div v-if="categories.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <template v-for="category in categories" :key="category.id">
-                <Link :href="FrontController.welcome({query: {category_id: category.id}})">
-                    <Card class="h-full">
-                        <CardContent>
-                            <img :src="`images/${category.image}`" alt="" />
-                            <p class="text-center mt-2">{{ category.name }}</p>
-                        </CardContent>
-                    </Card>
+                <Link :href="FrontController.welcome({ query: { category_id: category.id } })">
+                <Card class="h-full">
+                    <CardContent>
+                        <img :src="`images/${category.image}`" alt="" />
+                        <p class="text-center mt-2">{{ category.name }}</p>
+                    </CardContent>
+                </Card>
                 </Link>
             </template>
         </div>
@@ -106,19 +107,18 @@ const searchByCategory = (event: any) => {
     <section class="max-w-7xl mx-auto py-4 mt-6">
         <div>
             <h2 class="text-2xl text-center font-bold mb-4">Jobs</h2>
-            <div v-if="jobs.length > 0" class="space-y-4">
-                <Card v-for="job in jobs" :key="job.id" class="relative border-2 "
-                :class="{
-                    'border-amber-300' : job.application_status == 'pending',
-                    'border-green-300' : job.application_status == 'accepted',
-                    'border-blue-300' : job.application_status == 'viewed',
-                    'border-red-300' : job.application_status == 'rejected'
-                }"
-                >
-                    <div class="absolute right-5 top-2 text-xs bg-green-500 p-1 rounded-md text-white">Posted at {{ job.post_date }}</div>
+            <div v-if="jobs.data.length > 0" class="space-y-4">
+                <Card v-for="job in jobs.data" :key="job.id" class="relative border-2 " :class="{
+                    'border-amber-300': job.application_status == 'pending',
+                    'border-green-300': job.application_status == 'accepted',
+                    'border-blue-300': job.application_status == 'viewed',
+                    'border-red-300': job.application_status == 'rejected'
+                }">
+                    <div class="absolute right-5 top-2 text-xs bg-green-500 p-1 rounded-md text-white">Posted at {{
+                        job.post_date }}</div>
 
-                    <CardContent class="flex gap-4 ">
-                        
+                    <CardContent class="flex gap-4">
+
                         <img :src="job.image" alt="" class="h-44" />
 
                         <div class="flex flex-col justify-between ">
@@ -133,7 +133,7 @@ const searchByCategory = (event: any) => {
                                 <p><span class="font-bold">Experience Level :</span> {{ job.experience_level }}</p>
                                 <p v-if="job.close_date" class="text-red-500">Close Date : {{ job.close_date }}</p>
                             </div>
-                            <div class="my-5">
+                            <div class="mt-4">
                                 <h1 class="font-bold">
                                     Skills Required
                                 </h1>
@@ -141,12 +141,13 @@ const searchByCategory = (event: any) => {
                                     {{ job.skills }}
                                 </p>
                             </div>
-                            
+
                         </div>
                     </CardContent>
 
-                    <div class="p-4 ms-auto space-x-5">
-                        <Button v-if="job.employer_faq" type="button" @click="chatBot(job.employer_id)" variant="outline">Chat with employer</Button>
+                    <div class="px-8 space-x-5">
+                        <Button v-if="job.employer_faq" type="button" @click="chatBot(job.employer_id)"
+                            variant="outline">Chat with employer</Button>
                         <Button @click="applyJob(job.id, job.employer_id)" v-if="!job.applied">Apply</Button>
                         <Button variant="outline" v-else>
 
@@ -172,6 +173,9 @@ const searchByCategory = (event: any) => {
             </div>
             <div v-else class="text-center">
                 <p>No jobs found</p>
+            </div>
+            <div class="mt-4">
+                <Paginator :meta="jobs.meta" :routeName="FrontController.welcome().url" />
             </div>
         </div>
     </section>

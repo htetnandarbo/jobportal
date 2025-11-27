@@ -21,8 +21,8 @@ defineProps<{ partnerNetworks: any }>()
                 <template v-for="partnerNetwork in partnerNetworks" :key="partnerNetwork.id">
                     <a :href="partnerNetwork.website" target="_blank">
                         <Card class="h-full">
-                            <CardContent>
-                                <img :src="`images/${partnerNetwork.logo}`" alt="" />
+                            <CardContent class=" border">
+                                <img :src="`images/${partnerNetwork.logo}`" alt="" class="mx-auto" />
                                 <p class="text-center mt-2">{{ partnerNetwork.name }}</p>
                             </CardContent>
                         </Card>

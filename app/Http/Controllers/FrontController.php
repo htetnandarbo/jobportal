@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\CareerResource;
 use App\Models\Category;
 use App\Models\Company;
@@ -17,20 +18,21 @@ class FrontController extends Controller
     public function welcome(Request $request)
     {
         $jobs = Post::with('category', 'applications')
-        ->when($request->q, function($query) use($request){
-            $query->where('title','like', '%'.$request->q.'%')
-            ->orWhere('company_name', 'like', '%'.$request->q.'%')
-            ->orWhere('location', 'like', '%'.$request->q.'%')
-            ->orWhere('salary','like','%'.$request->q.'%');
-        })
-        ->when($request->category_id, function($query) use($request){
-            $query->where('category_id', $request->category_id);
-        })
-        ->get();
+            ->when($request->q, function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->q . '%')
+                    ->orWhere('company_name', 'like', '%' . $request->q . '%')
+                    ->orWhere('location', 'like', '%' . $request->q . '%')
+                    ->orWhere('salary', 'like', '%' . $request->q . '%');
+            })
+            ->when($request->category_id, function ($query) use ($request) {
+                $query->where('category_id', $request->category_id);
+            })
+            ->paginate(2)
+            ->withQueryString();
 
         $categories = Category::all();
         return Inertia::render('Welcome', [
-            'jobs' => $jobs,
+            'jobs' => PostResource::collection($jobs),
             'categories' => $categories
         ]);
     }
