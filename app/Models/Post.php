@@ -34,7 +34,7 @@ class Post extends Model
     }
 
     public function getEmployerFaqAttribute(){
-        return optional($this->employer)->faq()->exists();
+        return optional($this->employer)?->faq()?->exists();
     }
 
     public function getApplicationStatusAttribute(){
