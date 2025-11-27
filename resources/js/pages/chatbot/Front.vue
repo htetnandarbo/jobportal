@@ -8,9 +8,9 @@
           <CardHeader class="border-b">
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-4">
-                <Button variant="ghost" size="icon" @click="goBack">
+                <Link variant="ghost" size="icon" :href="FrontController.welcome().url">
                   <ChevronLeft />
-                </Button>
+                </Link>
                 <div>
                   <p class="font-semibold">{{ user.name }}</p>
                 </div>
@@ -102,8 +102,9 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, ChevronLeft, Phone, MoreVertical, Paperclip, Check } from 'lucide-vue-next';
-import { useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 import ChatBotController from '@/actions/App/Http/Controllers/ChatBotController';
+import FrontController from '@/actions/App/Http/Controllers/FrontController';
 
 const message = ref('');
 const typing = ref(false);
