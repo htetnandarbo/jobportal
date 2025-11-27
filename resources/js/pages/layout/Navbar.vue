@@ -24,7 +24,7 @@ const formSubmit = (role : string) => {
     <nav class="max-w-7xl mx-auto py-4">
         <div class="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
             <div>
-                <Link href="/">CAREER BRIDGE</Link>
+                <Link href="/" class="text-2xl font-bold text-green-500">CAREER BRIDGE</Link>
             </div>
             <div>
                 <NavigationMenu :viewport="false">

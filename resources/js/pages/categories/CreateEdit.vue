@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 // Lucide icons imports
 
 // Vue, inertia & other libraries imports
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 // Routes & controllers imports
 import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
@@ -17,6 +17,7 @@ import CategoryController from '@/actions/App/Http/Controllers/CategoryControlle
 // Custom components imports
 
 import AppLayout from '@/layouts/AppLayout.vue';
+import { Loader, LoaderCircle } from 'lucide-vue-next';
 
 // Props
 const props = defineProps<{
@@ -33,7 +34,7 @@ const submit = () => {
     if (!props.category.id) {
         form.submit(CategoryController.store());
     } else {
-        form.submit(CategoryController.update(props.category.id));
+        router.post(CategoryController.update(props.category.id), {...form as any, '_method': 'PUT'});
     }
 };
 </script>
@@ -65,18 +66,23 @@ const submit = () => {
                         type="file"
                         name="name"
                        
-                        @change="e => form.image = e.target.files[0]"
+                        @change="(e : any) => form.image = e.target.files[0]"
                       
                     />
 
+                    <div class="text-red-400">{{ form.errors.image }}</div>
+
                     <div v-if="props.category.image">
-    <img :src="`/storage/${props.category.image}`" class="w-20 h-20 object-cover">
-</div>
+                        <img :src="`/images/${props.category.image}`" class="w-20 h-20 object-cover">
+                    </div>
 
                 </div>
 
                 <div>
-                    <Button> Submit </Button>
+                    <Button :disabled="form.processing"> 
+                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                        Submit
+                     </Button>
                 </div>
             </form>
         </div>

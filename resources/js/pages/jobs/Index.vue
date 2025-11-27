@@ -10,6 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { PlusIcon } from 'lucide-vue-next';
@@ -105,9 +106,9 @@ const deleteJob = (id: any) => {
                                     <TableCell class="h-fit py-2">{{
                                         job.title
                                     }}</TableCell>
-                                    <TableCell class="h-fit py-2">{{
-                                        job.description
-                                    }}</TableCell>
+                                    <TableCell class="h-fit py-2">
+                                        <textarea rows="3" cols="25">{{ job.description }}</textarea>
+                                    </TableCell>
                                     <TableCell class="h-fit py-2">{{
                                         job.company_name
                                     }}</TableCell>

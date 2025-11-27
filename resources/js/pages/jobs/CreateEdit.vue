@@ -26,6 +26,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 
 import JobController from '@/actions/App/Http/Controllers/JobController';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { LoaderCircle } from 'lucide-vue-next';
 // import categories from '@/routes/categories';
 
 // Props
@@ -179,7 +180,10 @@ const submit = () => {
                 </div>
 
                 <div>
-                    <Button> Submit </Button>
+                    <Button :disabled="form.processing">
+                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                        Submit
+                     </Button>
                 </div>
             </form>
         </div>
