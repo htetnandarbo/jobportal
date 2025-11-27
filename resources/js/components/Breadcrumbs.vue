@@ -7,16 +7,20 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 interface BreadcrumbItemType {
     title: string;
     href?: string;
 }
 
+const page = usePage<any>()
+
 defineProps<{
     breadcrumbs: BreadcrumbItemType[];
 }>();
+
+
 </script>
 
 <template>
@@ -29,7 +33,8 @@ defineProps<{
                     </template>
                     <template v-else>
                         <BreadcrumbLink as-child>
-                            <Link :href="item.href ?? '#'">{{
+                            <Link :href="item.href ?? '#'">
+                            {{
                                 item.title
                             }}</Link>
                         </BreadcrumbLink>

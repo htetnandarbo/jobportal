@@ -38,10 +38,13 @@ class CategoryController extends Controller
         'image' => 'nullable|image|max:2048',
     ]);
 
-        $validated['employer_id'] = Auth::id();
+    $validated['employer_id'] = Auth::id();
         
     if ($request->hasFile('image')) {
-        $validated['image'] = $request->file('image')->store('categories', 'public');
+        $image = $request->file('image');
+        $image_name = time() . '.' . $image->getClientOriginalName();
+        $image->move(public_path('images'), $image_name);
+        $validated['image'] = $image_name;
     }
 
     Category::create($validated);
@@ -77,6 +80,19 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $image_name);
+            $validated['image'] = $image_name;
+
+            // delete old file
+            $old_file = Category::find($id)->image;
+            if ($old_file) {
+                unlink(public_path('images') . '/' . $old_file);
+            }
+        }
+
         Category::find($id)->update($validated);
 
         return redirect()->route('categories.index')->with('success', 'Unit Category updated');
@@ -88,5 +104,7 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         Category::find($id)->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Unit Category deleted');
     }
 }

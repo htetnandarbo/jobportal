@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
+import CompanyController from '@/actions/App/Http/Controllers/CompanyController';
+import PartnerNetworkController from '@/actions/App/Http/Controllers/PartnerNetworkController';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
@@ -17,12 +18,12 @@ import { PlusIcon } from 'lucide-vue-next';
 
 // Props
 defineProps<{
-    categories: any;
+    partnerNetworks: any;
 }>();
 
 // Delete
-const deleteCategory = (id: any) => {
-    useForm({}).submit(CategoryController.destroy(id));
+const deletePartnerNetwork = (id: any) => {
+    useForm({}).submit(PartnerNetworkController.destroy(id));
 };
 </script>
 
@@ -33,7 +34,7 @@ const deleteCategory = (id: any) => {
         <div class="m-5">
             <div class="mb-5">
                 <div class="flex justify-end gap-2">
-                    <Link :href="categoryCreate().url">
+                    <Link :href="PartnerNetworkController.create().url">
                         <Button
                             class="cursor-pointer rounded-2xl bg-amber-500 text-white shadow-sm shadow-amber-50 transition-all hover:bg-amber-600 hover:shadow-sm hover:shadow-amber-300 sm:w-auto"
                             >Add New <plus-icon></plus-icon
@@ -62,6 +63,9 @@ const deleteCategory = (id: any) => {
                                      <TableHead class="h-fit py-3"
                                         >Image</TableHead
                                     >
+                                     <TableHead class="h-fit py-3"
+                                        >Website</TableHead
+                                    >
                                     <TableHead
                                         class="h-fit rounded-r-full py-3"
                                     >
@@ -71,19 +75,19 @@ const deleteCategory = (id: any) => {
                             </TableHeader>
                             <TableBody>
                                 <TableRow
-                                    v-for="category in categories"
-                                    :key="category.id"
+                                    v-for="partnerNetwork in partnerNetworks"
+                                    :key="partnerNetwork.id"
                                 >
                                     <TableCell
                                         class="h-fit rounded-l-full py-2"
                                     >
-                                        {{ category.id }}
+                                        {{ partnerNetwork.id }}
                                     </TableCell>
                                     <TableCell class="h-fit py-2">{{
-                                        category.name
+                                        partnerNetwork.name
                                     }}</TableCell>
                                       <TableCell class="h-fit py-2">
-                                        <img :src="`/images/${category.image}`" class="w-20 h-20 object-cover" />
+                                        <img :src="`/images/${partnerNetwork.logo}`" class="w-20 h-20 object-cover" />
                                       </TableCell>
 
                                     <TableCell
@@ -92,8 +96,8 @@ const deleteCategory = (id: any) => {
                                         <div class="flex gap-2">
                                             <Link
                                                 :href="
-                                                    CategoryController.edit(
-                                                        category.id,
+                                                    PartnerNetworkController.edit(
+                                                        partnerNetwork.id,
                                                     )
                                                 "
                                             >
@@ -107,7 +111,7 @@ const deleteCategory = (id: any) => {
                                                 size="sm"
                                                 variant="outline"
                                                 @click="
-                                                    deleteCategory(category.id)
+                                                    deletePartnerNetwork(partnerNetwork.id)
                                                 "
                                                 >Delete</Button
                                             >

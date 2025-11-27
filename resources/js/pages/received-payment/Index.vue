@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
 import PaymentController from '@/actions/App/Http/Controllers/PaymentController';
 import UserController from '@/actions/App/Http/Controllers/UserController';
 import BasicSearch from '@/components/BasicSearch.vue';
@@ -25,6 +24,8 @@ defineProps<{
 // Delete
 const approve = (id: any) => {
     useForm({}).submit(PaymentController.update(id));
+    alert('Payment approved successfully');
+    location.reload();   
 };
 
 const q = ref<string>("");

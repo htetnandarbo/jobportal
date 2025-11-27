@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
+import CareerResourceController from '@/actions/App/Http/Controllers/CareerResourceController';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
@@ -11,18 +11,17 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { create as categoryCreate } from '@/routes/categories';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { PlusIcon } from 'lucide-vue-next';
 
 // Props
 defineProps<{
-    categories: any;
+    careerResources: any;
 }>();
 
 // Delete
-const deleteCategory = (id: any) => {
-    useForm({}).submit(CategoryController.destroy(id));
+const deleteCareerResource = (id: any) => {
+    useForm({}).submit(CareerResourceController.destroy(id));
 };
 </script>
 
@@ -33,7 +32,7 @@ const deleteCategory = (id: any) => {
         <div class="m-5">
             <div class="mb-5">
                 <div class="flex justify-end gap-2">
-                    <Link :href="categoryCreate().url">
+                    <Link :href="CareerResourceController.create().url">
                         <Button
                             class="cursor-pointer rounded-2xl bg-amber-500 text-white shadow-sm shadow-amber-50 transition-all hover:bg-amber-600 hover:shadow-sm hover:shadow-amber-300 sm:w-auto"
                             >Add New <plus-icon></plus-icon
@@ -59,8 +58,8 @@ const deleteCategory = (id: any) => {
                                     <TableHead class="h-fit py-3"
                                         >Name</TableHead
                                     >
-                                     <TableHead class="h-fit py-3"
-                                        >Image</TableHead
+                                    <TableHead class="h-fit py-3"
+                                        >Youtube Source</TableHead
                                     >
                                     <TableHead
                                         class="h-fit rounded-r-full py-3"
@@ -71,19 +70,19 @@ const deleteCategory = (id: any) => {
                             </TableHeader>
                             <TableBody>
                                 <TableRow
-                                    v-for="category in categories"
-                                    :key="category.id"
+                                    v-for="careerResource in careerResources"
+                                    :key="careerResource.id"
                                 >
                                     <TableCell
                                         class="h-fit rounded-l-full py-2"
                                     >
-                                        {{ category.id }}
+                                        {{ careerResource.id }}
                                     </TableCell>
                                     <TableCell class="h-fit py-2">{{
-                                        category.name
+                                        careerResource.name
                                     }}</TableCell>
                                       <TableCell class="h-fit py-2">
-                                        <img :src="`/images/${category.image}`" class="w-20 h-20 object-cover" />
+                                        {{ careerResource.youtube_src }}
                                       </TableCell>
 
                                     <TableCell
@@ -92,8 +91,8 @@ const deleteCategory = (id: any) => {
                                         <div class="flex gap-2">
                                             <Link
                                                 :href="
-                                                    CategoryController.edit(
-                                                        category.id,
+                                                    CareerResourceController.edit(
+                                                        careerResource.id,
                                                     )
                                                 "
                                             >
@@ -107,7 +106,7 @@ const deleteCategory = (id: any) => {
                                                 size="sm"
                                                 variant="outline"
                                                 @click="
-                                                    deleteCategory(category.id)
+                                                    deleteCareerResource(careerResource.id)
                                                 "
                                                 >Delete</Button
                                             >

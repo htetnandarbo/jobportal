@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\CareerResourceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MakePaymentController;
+use App\Http\Controllers\PartnerNetworkController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ScheduleController;
@@ -31,6 +34,15 @@ require __DIR__ . '/auth.php';
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index']);
+
+    // Companies
+    Route::resource('companies', CompanyController::class);
+
+    // Career Resources
+    Route::resource('career-resources', CareerResourceController::class);
+
+    // Partner Networks
+    Route::resource('partner-networks', PartnerNetworkController::class);
 
     // Make payment
     Route::get('make-payments', [MakePaymentController::class, 'index'])->name('make-payments');

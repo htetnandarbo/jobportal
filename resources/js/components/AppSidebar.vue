@@ -27,6 +27,9 @@ import ApplicationController from '@/actions/App/Http/Controllers/ApplicationCon
 import ResumeController from '@/actions/App/Http/Controllers/ResumeController';
 import FrontController from '@/actions/App/Http/Controllers/FrontController';
 import Layout from '@/layouts/settings/Layout.vue';
+import CareerResourceController from '@/actions/App/Http/Controllers/CareerResourceController';
+import CompanyController from '@/actions/App/Http/Controllers/CompanyController';
+import PartnerNetworkController from '@/actions/App/Http/Controllers/PartnerNetworkController';
 
 // Routes and controllers 
 
@@ -113,6 +116,24 @@ const adminNavItems: any[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
+        icon: LayoutGrid,
+        hasPaid: true
+    },
+    {
+        title: 'Companies',
+        href: CompanyController.index(),
+        icon: LayoutGrid,
+        hasPaid: true
+    },
+    {
+        title: 'Partner Networks',
+        href: PartnerNetworkController.index(),
+        icon: LayoutGrid,
+        hasPaid: true
+    },
+    {
+        title: 'Career Resources',
+        href: CareerResourceController.index(),
         icon: LayoutGrid,
         hasPaid: true
     },

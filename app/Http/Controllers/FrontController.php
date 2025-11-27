@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CareerResource;
 use App\Models\Category;
+use App\Models\Company;
+use App\Models\PartnerNetwork;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,18 +39,27 @@ class FrontController extends Controller
     // Companies
     public function companies()
     {
-        return Inertia::render('Companies');
+        $companies = Company::all();
+        return Inertia::render('Companies', [
+            'companies' => $companies
+        ]);
     }
 
     // Partner Networks
     public function partnerNetworks()
     {
-        return Inertia::render('PartnerNetworks');
+        $partnerNetworks = PartnerNetwork::all();
+        return Inertia::render('PartnerNetworks', [
+            'partnerNetworks' => $partnerNetworks
+        ]);
     }
 
     // Career Resources
     public function careerResources()
     {
-        return Inertia::render('CareerResources');
+        $careerResources = CareerResource::all();
+        return Inertia::render('CareerResources', [
+            'careerResources' => $careerResources
+        ]);
     }
 }
