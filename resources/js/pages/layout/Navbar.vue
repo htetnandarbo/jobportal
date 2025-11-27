@@ -9,14 +9,26 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
-import { dashboard } from '@/routes';
-import { Link, useForm } from '@inertiajs/vue3';
+import { dashboard, logout } from '@/routes';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const currentUrl = ref(window.location.pathname)
 
 const formSubmit = (role : string) => {
     useForm({'role' : role}).submit(DashboardController.index())
+}
+
+const login = () => {
+    router.get('login');
+}
+
+const logoutAcc = () => {
+    router.flushAll();
+}
+
+const register = () => {
+    router.get('register')
 }
 </script>
 
@@ -52,25 +64,51 @@ const formSubmit = (role : string) => {
             </div>
             <div>
                 <NavigationMenu :viewport="false">
-                    <NavigationMenuList>
+                    <NavigationMenuList v-if="$page.props.auth.user">
                         <NavigationMenuItem>
                             <NavigationMenuLink as-child
+                                v-if="$page.props.auth.user.role == 'job-seeker'"
                                 :class="[navigationMenuTriggerStyle(), currentUrl === '/' ? 'bg-green-400' : '']">
                                 <p class="cursor-pointer" @click="formSubmit('job-seeker')" href="/admin/dashboard">JOB SEEKER</p>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink as-child
+                                v-if="$page.props.auth.user.role == 'freelancer'"
                                 :class="[navigationMenuTriggerStyle(), currentUrl === '/companies' ? 'bg-green-400' : '']">
                                 <p class="cursor-pointer" @click="formSubmit('freelancer')">FREELANCER</p>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink as-child
+                                v-if="$page.props.auth.user.role == 'employer'"
                                 :class="[navigationMenuTriggerStyle(), currentUrl === '/companies' ? 'bg-green-400' : '']">
                                 <p class="cursor-pointer" @click="formSubmit('employer')">COMPANY</p>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink as-child
+                                class="px-5">
+                                <Link class="cursor-pointer" :href="logout()" @click="logoutAcc()">Logout</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                    </NavigationMenuList>
+                    <NavigationMenuList v-else>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink as-child
+                            class="px-5"
+                                >
+                                <p class="cursor-pointer" @click="login()">Login</p>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink as-child
+                            class="px-5"
+                                >
+                                <p class="cursor-pointer" @click="register()">Register</p>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        
                     </NavigationMenuList>
                 </NavigationMenu>
             </div>

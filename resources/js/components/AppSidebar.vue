@@ -87,22 +87,16 @@ const employeeNavItems: any[] = [
         hasPaid: true,             
     }, 
     {
-        title: 'Make Payment',
-        href: MakePaymentController.index(),
-        icon: LayoutGrid,
-        hasPaid: true,             
-    }, 
-    {
         title: 'Resume',
         href: ResumeController.index(),
         icon: LayoutGrid,
-        hasPaid: hasPaid,             
+        hasPaid: true,             
     }, 
     {
         title: 'Interview Schedule',
         href: ScheduleController.index(),
         icon: LayoutGrid,
-        hasPaid: hasPaid
+        hasPaid: true
     }
 ];
 
