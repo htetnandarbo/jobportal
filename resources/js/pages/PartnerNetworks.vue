@@ -6,7 +6,7 @@ import {
 import Navbar from '@/pages/layout/Navbar.vue'
 import Footer from './layout/Footer.vue'
 
-defineProps<{partnerNetworks: any}>()
+defineProps<{ partnerNetworks: any }>()
 </script>
 
 <template>
@@ -20,7 +20,7 @@ defineProps<{partnerNetworks: any}>()
             <div v-if="partnerNetworks.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <template v-for="partnerNetwork in partnerNetworks" :key="partnerNetwork.id">
                     <a :href="partnerNetwork.website" target="_blank">
-                        <Card>
+                        <Card class="h-full">
                             <CardContent>
                                 <img :src="`images/${partnerNetwork.logo}`" alt="" />
                                 <p class="text-center mt-2">{{ partnerNetwork.name }}</p>
