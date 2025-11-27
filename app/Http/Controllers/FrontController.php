@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\PartnerNetwork;
 use App\Models\Post;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -28,10 +29,16 @@ class FrontController extends Controller
         })
         ->get();
 
+        $projects = null;
+        if($request->show_freelance_project){
+            $projects = Project::with('comments', 'comments.user')->get();
+        }
+
         $categories = Category::all();
         return Inertia::render('Welcome', [
             'jobs' => $jobs,
-            'categories' => $categories
+            'categories' => $categories,
+            'projects' => $projects
         ]);
     }
 

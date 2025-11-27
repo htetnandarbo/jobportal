@@ -11,9 +11,11 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\MakePaymentController;
 use App\Http\Controllers\PartnerNetworkController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
+use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -73,6 +75,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::resource('applications', ApplicationController::class);
 
     Route::resource('resume', ResumeController::class);
+
+    Route::resource('project', ProjectController::class);
+    Route::post('project/store-comment', [ProjectController::class, 'storeComment'])->name('project.store-comment');
 
 });
 

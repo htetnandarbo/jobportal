@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DashboardController from '@/actions/App/Http/Controllers/DashboardController';
+import FrontController from '@/actions/App/Http/Controllers/FrontController';
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -30,6 +31,10 @@ const logoutAcc = () => {
 const register = () => {
     router.get('register')
 }
+
+const freelancerProject = () => {
+    useForm({'show_freelance_project' : true}).submit(FrontController.welcome())
+}
 </script>
 
 <template>
@@ -57,6 +62,12 @@ const register = () => {
                             <NavigationMenuLink as-child
                                 :class="[navigationMenuTriggerStyle(), currentUrl === '/career-resources' ? 'bg-green-400' : '']">
                                 <Link href="/career-resources">CAREER RESOURCES</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink as-child
+                                :class="[navigationMenuTriggerStyle(), currentUrl === '/career-resources' ? 'bg-green-400' : '']">
+                                <p @click="freelancerProject()">FREELANCERS' PROJECTS</p>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     </NavigationMenuList>

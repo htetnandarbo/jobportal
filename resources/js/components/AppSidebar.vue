@@ -30,6 +30,7 @@ import Layout from '@/layouts/settings/Layout.vue';
 import CareerResourceController from '@/actions/App/Http/Controllers/CareerResourceController';
 import CompanyController from '@/actions/App/Http/Controllers/CompanyController';
 import PartnerNetworkController from '@/actions/App/Http/Controllers/PartnerNetworkController';
+import ProjectController from '@/actions/App/Http/Controllers/ProjectController';
 
 // Routes and controllers 
 
@@ -100,6 +101,33 @@ const employeeNavItems: any[] = [
     }
 ];
 
+const freelancerNavItems: any[] = [
+    {
+        title: 'Home',
+        href: FrontController.welcome(),
+        icon: LayoutGrid,
+        hasPaid: true,             
+    }, 
+    {
+        title: 'Resume',
+        href: ResumeController.index(),
+        icon: LayoutGrid,
+        hasPaid: true,             
+    }, 
+    {
+        title: 'Interview Schedule',
+        href: ScheduleController.index(),
+        icon: LayoutGrid,
+        hasPaid: true
+    },
+    {
+        title: 'Projects',
+        href: ProjectController.index(),
+        icon: LayoutGrid,
+        hasPaid: true,
+    },
+];
+
 const adminNavItems: any[] = [
     {
         title: 'Dashboard',
@@ -155,6 +183,7 @@ const adminNavItems: any[] = [
         icon: LayoutGrid,
         hasPaid: true,
     },
+    
 ];
 
 
@@ -177,7 +206,7 @@ const adminNavItems: any[] = [
 
         <SidebarContent>
             <NavMain :items="employerNavItems" v-if="userRole === 'employer'" />
-            <NavMain :items="employeeNavItems" v-if="userRole === 'freelancer'" />
+            <NavMain :items="freelancerNavItems" v-if="userRole === 'freelancer'" />
             <NavMain :items="adminNavItems" v-if="userRole === 'admin'" />
             <NavMain :items="employeeNavItems" v-if="userRole === 'job-seeker'" />
         </SidebarContent>
